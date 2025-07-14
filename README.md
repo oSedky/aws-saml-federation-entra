@@ -12,7 +12,7 @@ This project implements secure single sign-on to the AWS Console using Microsoft
 - **Conditional Access** enforcing MFA and IP-based rules
 - **Audit logs** in both platforms
 
-![Federation Architecture Diagram](./Screenshots/project1-federation-architecture.png)
+![Federation Architecture](Screenshots/Federation%20AWS%20Azure%20Setup.png)
 
 ---
 
