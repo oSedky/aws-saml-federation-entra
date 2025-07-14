@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SAML Federation – Project Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <style>
+    .caption {
+      font-size: 0.9em;
+      color: #000;
+      margin-top: -1.2em;
+      margin-bottom: 2em;
+    }
+  </style>
+</head>
+<body class="is-preload">
+  <article id="main">
+    <header style="text-align: center; color: #000; max-width: 900px; margin: 0 auto;">
+  <p style="font-size: 0.9em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5em;">
+    Project Documentation
+  </p>
+
+  <h2 style="margin-bottom: 0.5em; font-size: 2.2em; line-height: 1.3;">
+  Federating AWS Console Sign-in with Microsoft Entra ID & Conditional Access
+</h2>
+
+  <p style="font-size: 1.05em; font-style: italic; margin-bottom: 1em;">
+    This project demonstrates a robust solution for integrating AWS Console access with Microsoft Entra ID using SAML 2.0 federation and Conditional Access. It addresses real-world identity management requirements with security-first design and automation.
+  </p>
+</header>
+
+    <section class="wrapper style2 container" style="background-color: #f5f5f5; padding: 3em 2em; border-radius: 12px;">
+      <div class="row gtr-150">
+        <div class="col-12 col-12-medium">
+          <div style="color: #000; text-align: left;">
+            <h3>1. Problem Statement</h3>
+<p>In modern enterprises, centralized identity management is critical for secure access control across cloud environments. Many organizations rely on Microsoft Entra ID (Azure AD) as their primary Identity Provider. This project solves the challenge of federating AWS sign-in using SAML 2.0 while enforcing Conditional Access policies such as MFA and group-based role mapping.</p>
+
+<h3>2. Architecture Overview</h3>
+<ul style="margin-left: 1.5em;">
+  <li>Microsoft Entra ID (Azure AD) as SAML Identity Provider</li>
+  <li>AWS IAM Identity Provider + IAM Roles with Trust Policies</li>
+  <li>Security Groups to control access levels</li>
+  <li>Conditional Access policy enforcing MFA and trusted location access</li>
+</ul>
+<img src="assets/images/project1/project1-federation-architecture.png" alt="SAML Federation Architecture" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Federation flow: Entra ID evaluates Conditional Access and issues SAML assertion to AWS with trusted role assumption.</p>
+
+<h3>3. Step-by-Step Implementation</h3>
+<ul style="margin-left: 1.5em;">
+  <li>Create a dedicated user in Microsoft 365 for federation</li>
+  <li>Define security groups for access control</li>
+  <li>Register AWS app in Microsoft Entra ID as Enterprise App</li>
+  <li>Configure basic SAML settings and group-based claims</li>
+  <li>Download and save the Federation Metadata XML</li>
+  <li>Create IAM Identity Provider in AWS Console</li>
+  <li>Create IAM Role with group-based trust policy</li>
+  <li>Configure Conditional Access policy targeting AWS app</li>
+</ul>
+<p>Screenshots from each step are provided below.</p>
+<img src="assets/images/project1/01-user-creation-federation-sedky-net.png" alt="Microsoft 365 User Creation" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">User created for federated authentication. MFA and policy applied through Entra ID.</p>
+
+<img src="assets/images/project1/03-group-owner-aws-users.png" alt="Group Ownership" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Security group created for role-based access to AWS.</p>
+
+<img src="assets/images/project1/04-saml-settings-aws-app.png" alt="SAML Settings" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Enterprise application registered with AWS-specific SAML endpoints.</p>
+
+<img src="assets/images/project1/06-saml-claims-group-settings.png" alt="Claims Settings" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Group claim issued to drive access control in IAM trust policy.</p>
+
+<img src="assets/images/project1/08-aws-identity-provider-create.png" alt="AWS Identity Provider" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">IAM Identity Provider created in AWS using downloaded metadata from Entra.</p>
+
+<img src="assets/images/project1/09-iam-role-federation-create.png" alt="IAM Role Creation" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Role created for federated users. Access governed by trust and group claims.</p>
+
+<img src="assets/images/project1/11-trust-policy-update-confirmation.png" alt="IAM Trust Policy" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Trust policy specifies SAML provider and group claim for access grant.</p>
+
+<img src="assets/images/project1/12-entra-user-app-assignment.png" alt="App Assignment" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Group assignment mapped to AWS Enterprise App for scoped access.</p>
+
+<img src="assets/images/project1/13-sso-login-success.png" alt="SSO Login Success" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">User initiates SSO login through MyApps portal.</p>
+
+<img src="assets/images/project1/14-aws-console-federated-login.png" alt="Federated Role Display" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Federated user lands in AWS Console with correct assumed role.</p>
+
+<h3>4. Conditional Access – Trusted vs. Untrusted Location</h3>
+<p>The Conditional Access policy was configured with the following criteria:</p>
+<ul style="margin-left: 1.5em;">
+  <li>Targeted application: AWS Enterprise App</li>
+  <li>Assigned group: AWS-Users security group</li>
+  <li>Grant control: Require MFA</li>
+  <li>Named Location: Trusted IPs from Canada only</li>
+</ul>
+<img src="assets/images/project1/15-conditional-access-policy-canada.png" alt="CA Policy" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Named location policy allowing access only from Canadian IP ranges.</p>
+
+<img src="assets/images/project1/22-conditional-access-policy-enforced.png" alt="CA Policy Enforced" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">Policy includes specific group and resource restrictions, enforced through location filter.</p>
+
+<p>Login testing confirmed enforcement:</p>
+<ul style="margin-left: 1.5em;">
+  <li><strong>Trusted:</strong> Canada IP → successful login</li>
+  <li><strong>Untrusted:</strong> VPN from US → access blocked</li>
+</ul>
+<img src="assets/images/project1/21-sign-in-logs-success-aws-portal.png" alt="Trusted Location Access" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">User from trusted IP successfully signs into AWS Console.</p>
+
+<img src="assets/images/project1/23-login-blocked-non-canada.png" alt="Blocked Access from Untrusted Location" style="max-width:100%; border-radius: 10px; margin: 2em 0;">
+<p class="caption">User from untrusted IP (VPN US) blocked by CA policy enforcement.</p>
+
+<h3>5. Security & Operational Impact</h3>
+<ul style="margin-left: 1.5em;">
+  <li>Enforces MFA and centralized login via Microsoft Entra ID</li>
+  <li>Eliminates static IAM users and long-lived credentials</li>
+  <li>Role access tightly scoped to Entra security group membership</li>
+  <li>Auditability through Entra sign-in logs & AWS CloudTrail</li>
+</ul>
+
+<h3>6. AWS Well-Architected Framework Alignment</h3>
+<ul style="margin-left: 1.5em;">
+  <li><strong>Security:</strong> Federation reduces attack surface and enforces identity-based policies</li>
+  <li><strong>Operational Excellence:</strong> Identity lifecycle is managed entirely within Entra ID</li>
+  <li><strong>Reliability:</strong> Trust policies and claims mapping prevent privilege drift</li>
+  <li><strong>Cost Optimization:</strong> Utilizes native features, no custom auth infra required</li>
+  <li><strong>Performance Efficiency:</strong> SAML assertions processed with minimal overhead</li>
+</ul>
+
+<h3>7. Challenges & Solutions</h3>
+<ul style="margin-left: 1.5em;">
+  <li><strong>Group Claim Not Mapping:</strong> Resolved by using Entra Object ID in the claim</li>
+  <li><strong>IAM Trust Policy Syntax Errors:</strong> Corrected using AWS role simulator preview</li>
+  <li><strong>Access from US not blocked:</strong> Fixed by adding named location + CA policy</li>
+  <li><strong>Login loop on SSO:</strong> Cleared stale sessions and used new incognito session</li>
+</ul>
+
+<h3>8. Final Outcome</h3>
+<p style="margin-bottom: 0.5em;">
+  This implementation demonstrates a production-grade identity federation model between AWS and Microsoft Entra ID. All access is controlled, conditional, and tied to identity groups with audit trails in both platforms. It can be extended to multiple roles, accounts, or organizations using the same architecture pattern.
+</p>
+<p style="margin-top: 0;">
+  This project highlights my ability to design and implement secure, scalable, and compliant cloud identity solutions, aligning with modern enterprise standards and AWS Well-Architected principles.
+</p>
+
+<a href="https://github.com/oSedky/aws-saml-federation-entra" target="_blank" class="button">📘 View Full GitHub Documentation</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="text-align: center; margin-top: 3em;">
+      <a href="index.html" class="button">← Back to Home</a>
+    </footer>
+  </article>
+
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/browser.min.js"></script>
+  <script src="assets/js/breakpoints.min.js"></script>
+  <script src="assets/js/util.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
