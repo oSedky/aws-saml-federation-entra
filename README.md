@@ -104,7 +104,7 @@ Project-01-Federation-AWS-M365/
 
 ## 📘 Full Documentation
 
-👉 [View complete implementation walkthrough](./saml-federation.html)
+👉 [Read the full implementation walkthrough on sedky.net](https://sedky.net/project1-saml-federation.html)
 
 ---
 
